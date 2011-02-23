@@ -22,7 +22,7 @@ sites_field = None
 if settings.USE_SITES:
     from django.contrib.sites.models import Site
     def default_sites():
-        return [Site.objects.get_current()]
+        return [Site.objects.get_current().pk]
     sites_field = models.ManyToManyField(Site, default=default_sites)
 
 class FormManager(models.Manager):
@@ -120,6 +120,9 @@ class AbstractForm(models.Model):
         return "<a href='%s'>%s</a>" % (url, ugettext("Export entries"))
     admin_link_export.allow_tags = True
     admin_link_export.short_description = ""
+
+    def get_key_for_field(self, field):
+        return "field_%s" % field.id
 
 class FieldManager(models.Manager):
     """
